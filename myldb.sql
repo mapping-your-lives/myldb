@@ -24,7 +24,7 @@ DROP TABLE "transportmodes";
 
 CREATE TABLE "users" (
 "uid" int8 NOT NULL,
-"gender" int2,
+"gender" varchar(255),
 "email" varchar(255) NOT NULL,
 "birthday" date,
 "deathday" date,
@@ -38,7 +38,7 @@ WITHOUT OIDS;
 CREATE TABLE "events" (
 "eid" int8 NOT NULL,
 "space_id" int8 NOT NULL,
-"started_at" timestamp(0) NOT NULL,
+"started_at" timestamptz(0) NOT NULL,
 "duration" interval(0) NOT NULL,
 "description" varchar(255),
 PRIMARY KEY ("eid") 
