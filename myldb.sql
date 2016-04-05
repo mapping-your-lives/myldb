@@ -1,134 +1,119 @@
-ALTER TABLE "public"."mobileprofiles" DROP CONSTRAINT "fk_mobileprofiles_users_1";
-ALTER TABLE "public"."mobileprofiles" DROP CONSTRAINT "fk_mobileprofiles_transportmodes_1";
-ALTER TABLE "public"."lifelines" DROP CONSTRAINT "fk_lifelines_users_1";
-ALTER TABLE "public"."participants" DROP CONSTRAINT "fk_participants_users_1";
-ALTER TABLE "public"."participants" DROP CONSTRAINT "fk_participants_events_1";
-ALTER TABLE "public"."events" DROP CONSTRAINT "fk_events_spatialinfo_1";
-ALTER TABLE "public"."spatialinfo" DROP CONSTRAINT "fk_spatialinfo_places_1";
-ALTER TABLE "public"."events" DROP CONSTRAINT "fk_events_transportinfo_1";
-ALTER TABLE "public"."tracks" DROP CONSTRAINT "fk_tracks_spatialinfo_1";
-ALTER TABLE "public"."transportmodes" DROP CONSTRAINT "fk_transportmodes_modes_1";
-ALTER TABLE "public"."transportmodes" DROP CONSTRAINT "fk_transportmodes_transportinfo_1";
+ALTER TABLE "mobileprofiles" DROP CONSTRAINT "fk_mobileprofiles_users_1";
+ALTER TABLE "mobileprofiles" DROP CONSTRAINT "fk_mobileprofiles_transportmodes_1";
+ALTER TABLE "lifelines" DROP CONSTRAINT "fk_lifelines_users_1";
+ALTER TABLE "participants" DROP CONSTRAINT "fk_participants_users_1";
+ALTER TABLE "participants" DROP CONSTRAINT "fk_participants_events_1";
+ALTER TABLE "events" DROP CONSTRAINT "fk_events_spatialinfo_1";
+ALTER TABLE "spatialinfo" DROP CONSTRAINT "fk_spatialinfo_places_1";
+ALTER TABLE "tracks" DROP CONSTRAINT "fk_tracks_spatialinfo_1";
+ALTER TABLE "transportmodes" DROP CONSTRAINT "fk_transportmodes_modes_1";
+ALTER TABLE "transportmodes" DROP CONSTRAINT "fk_transportmodes_transportinfo_1";
+ALTER TABLE "transportinfo" DROP CONSTRAINT "fk_transportinfo_events_1";
 
-ALTER TABLE "public"."users" DROP CONSTRAINT "";
-ALTER TABLE "public"."events" DROP CONSTRAINT "";
-ALTER TABLE "public"."places" DROP CONSTRAINT "";
-ALTER TABLE "public"."tracks" DROP CONSTRAINT "";
-ALTER TABLE "public"."modes" DROP CONSTRAINT "";
-ALTER TABLE "public"."participants" DROP CONSTRAINT "";
-ALTER TABLE "public"."spatialinfo" DROP CONSTRAINT "";
-ALTER TABLE "public"."mobileprofiles" DROP CONSTRAINT "";
+DROP TABLE "users";
+DROP TABLE "events";
+DROP TABLE "places";
+DROP TABLE "lifelines";
+DROP TABLE "tracks";
+DROP TABLE "modes";
+DROP TABLE "participants";
+DROP TABLE "spatialinfo";
+DROP TABLE "mobileprofiles";
+DROP TABLE "transportinfo";
+DROP TABLE "transportmodes";
 
-DROP TABLE "public"."users";
-DROP TABLE "public"."events";
-DROP TABLE "public"."places";
-DROP TABLE "public"."lifelines";
-DROP TABLE "public"."tracks";
-DROP TABLE "public"."modes";
-DROP TABLE "public"."participants";
-DROP TABLE "public"."spatialinfo";
-DROP TABLE "public"."mobileprofiles";
-DROP TABLE "public"."transportinfo";
-DROP TABLE "public"."transportmodes";
-
-CREATE TABLE "public"."users" (
+CREATE TABLE "users" (
 "uid" int8 NOT NULL,
 "gender" int2,
 "email" varchar(255) NOT NULL,
 "birthday" date,
+"deathday" date,
 "education" varchar(255),
 "name" varchar(255),
 "disabled" varchar(255),
-PRIMARY KEY ("uid") ,
-UNIQUE ("uid")
+PRIMARY KEY ("uid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."events" (
+CREATE TABLE "events" (
 "eid" int8 NOT NULL,
 "space_id" int8 NOT NULL,
-"transport_id" int8 NOT NULL,
 "started_at" timestamp(0) NOT NULL,
 "duration" interval(0) NOT NULL,
 "description" varchar(255),
-PRIMARY KEY ("eid") ,
-UNIQUE ("eid")
+PRIMARY KEY ("eid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."places" (
+CREATE TABLE "places" (
 "pid" int8 NOT NULL,
 "name" varchar(255) NOT NULL,
 "geometry" point NOT NULL,
-PRIMARY KEY ("pid") ,
-UNIQUE ("pid")
+PRIMARY KEY ("pid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."lifelines" (
+CREATE TABLE "lifelines" (
+"lid" int8 NOT NULL,
 "user_id" int8 NOT NULL,
-PRIMARY KEY ("user_id") 
+PRIMARY KEY ("lid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."tracks" (
+CREATE TABLE "tracks" (
 "tid" int8 NOT NULL,
 "geometry" line NOT NULL,
 "description" varchar(255),
 "space_id" int8,
-PRIMARY KEY ("tid") ,
-UNIQUE ("tid")
+PRIMARY KEY ("tid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."modes" (
+CREATE TABLE "modes" (
 "mid" int8 NOT NULL,
-"avg_speed" float4 NOT NULL,
 "name" varchar(255) NOT NULL,
-PRIMARY KEY ("mid") ,
-UNIQUE ("mid")
+"avg_speed" float4 NOT NULL,
+PRIMARY KEY ("mid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."participants" (
+CREATE TABLE "participants" (
 "pid" int8 NOT NULL,
 "user_id" int8 NOT NULL,
 "event_id" int8 NOT NULL,
-PRIMARY KEY ("pid") ,
-UNIQUE ("pid")
+PRIMARY KEY ("pid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."spatialinfo" (
+CREATE TABLE "spatialinfo" (
 "sid" int8 NOT NULL,
 "place_id" int8 NOT NULL,
 "description" varchar(255),
-PRIMARY KEY ("sid") ,
-UNIQUE ("sid")
+PRIMARY KEY ("sid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."mobileprofiles" (
+CREATE TABLE "mobileprofiles" (
 "mpid" int8 NOT NULL,
 "user_id" int8 NOT NULL,
 "mode_id" int8 NOT NULL,
 "priority" int4 NOT NULL DEFAULT 1,
-PRIMARY KEY ("mpid") ,
-UNIQUE ("mpid")
+PRIMARY KEY ("mpid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."transportinfo" (
+CREATE TABLE "transportinfo" (
 "tid" int8 NOT NULL,
 "cost" float8,
 "duration" interval(0),
 "distance" float8,
 "description" varchar(255),
+"event_id" int8,
 PRIMARY KEY ("tid") 
 )
 WITHOUT OIDS;
 
-CREATE TABLE "public"."transportmodes" (
+CREATE TABLE "transportmodes" (
 "tmid" int8 NOT NULL,
 "mode_id" int8 NOT NULL,
 "transinfo_id" int8 NOT NULL,
@@ -137,15 +122,15 @@ PRIMARY KEY ("tmid")
 WITHOUT OIDS;
 
 
-ALTER TABLE "public"."mobileprofiles" ADD CONSTRAINT "fk_mobileprofiles_users_1" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("uid") ON DELETE CASCADE;
-ALTER TABLE "public"."mobileprofiles" ADD CONSTRAINT "fk_mobileprofiles_transportmodes_1" FOREIGN KEY ("mode_id") REFERENCES "public"."modes" ("mid");
-ALTER TABLE "public"."lifelines" ADD CONSTRAINT "fk_lifelines_users_1" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("uid");
-ALTER TABLE "public"."participants" ADD CONSTRAINT "fk_participants_users_1" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("uid");
-ALTER TABLE "public"."participants" ADD CONSTRAINT "fk_participants_events_1" FOREIGN KEY ("event_id") REFERENCES "public"."events" ("eid");
-ALTER TABLE "public"."events" ADD CONSTRAINT "fk_events_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "public"."spatialinfo" ("sid");
-ALTER TABLE "public"."spatialinfo" ADD CONSTRAINT "fk_spatialinfo_places_1" FOREIGN KEY ("place_id") REFERENCES "public"."places" ("pid");
-ALTER TABLE "public"."events" ADD CONSTRAINT "fk_events_transportinfo_1" FOREIGN KEY ("transport_id") REFERENCES "public"."transportinfo" ("tid");
-ALTER TABLE "public"."tracks" ADD CONSTRAINT "fk_tracks_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "public"."spatialinfo" ("sid");
-ALTER TABLE "public"."transportmodes" ADD CONSTRAINT "fk_transportmodes_modes_1" FOREIGN KEY ("mode_id") REFERENCES "public"."modes" ("mid");
-ALTER TABLE "public"."transportmodes" ADD CONSTRAINT "fk_transportmodes_transportinfo_1" FOREIGN KEY ("transinfo_id") REFERENCES "public"."transportinfo" ("tid");
+ALTER TABLE "mobileprofiles" ADD CONSTRAINT "fk_mobileprofiles_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("uid") ON DELETE CASCADE;
+ALTER TABLE "mobileprofiles" ADD CONSTRAINT "fk_mobileprofiles_transportmodes_1" FOREIGN KEY ("mode_id") REFERENCES "modes" ("mid");
+ALTER TABLE "lifelines" ADD CONSTRAINT "fk_lifelines_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("uid");
+ALTER TABLE "participants" ADD CONSTRAINT "fk_participants_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("uid");
+ALTER TABLE "participants" ADD CONSTRAINT "fk_participants_events_1" FOREIGN KEY ("event_id") REFERENCES "events" ("eid");
+ALTER TABLE "events" ADD CONSTRAINT "fk_events_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "spatialinfo" ("sid");
+ALTER TABLE "spatialinfo" ADD CONSTRAINT "fk_spatialinfo_places_1" FOREIGN KEY ("place_id") REFERENCES "places" ("pid");
+ALTER TABLE "tracks" ADD CONSTRAINT "fk_tracks_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "spatialinfo" ("sid");
+ALTER TABLE "transportmodes" ADD CONSTRAINT "fk_transportmodes_modes_1" FOREIGN KEY ("mode_id") REFERENCES "modes" ("mid");
+ALTER TABLE "transportmodes" ADD CONSTRAINT "fk_transportmodes_transportinfo_1" FOREIGN KEY ("transinfo_id") REFERENCES "transportinfo" ("tid");
+ALTER TABLE "transportinfo" ADD CONSTRAINT "fk_transportinfo_events_1" FOREIGN KEY ("event_id") REFERENCES "events" ("eid");
 
