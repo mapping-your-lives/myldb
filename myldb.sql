@@ -4,17 +4,13 @@ ALTER TABLE "lifelines" DROP CONSTRAINT "fk_lifelines_users_1";
 ALTER TABLE "participants" DROP CONSTRAINT "fk_participants_users_1";
 ALTER TABLE "participants" DROP CONSTRAINT "fk_participants_events_1";
 ALTER TABLE "events" DROP CONSTRAINT "fk_events_spatialinfo_1";
-ALTER TABLE "spatialinfo" DROP CONSTRAINT "fk_spatialinfo_places_1";
-ALTER TABLE "tracks" DROP CONSTRAINT "fk_tracks_spatialinfo_1";
 ALTER TABLE "transportmodes" DROP CONSTRAINT "fk_transportmodes_modes_1";
 ALTER TABLE "transportmodes" DROP CONSTRAINT "fk_transportmodes_transportinfo_1";
 ALTER TABLE "transportinfo" DROP CONSTRAINT "fk_transportinfo_events_1";
 
 DROP TABLE "users";
 DROP TABLE "events";
-DROP TABLE "places";
 DROP TABLE "lifelines";
-DROP TABLE "tracks";
 DROP TABLE "modes";
 DROP TABLE "participants";
 DROP TABLE "spatialinfo";
@@ -45,27 +41,10 @@ PRIMARY KEY ("eid")
 )
 WITHOUT OIDS;
 
-CREATE TABLE "places" (
-"pid" int8 NOT NULL,
-"name" varchar(255) NOT NULL,
-"geometry" point NOT NULL,
-PRIMARY KEY ("pid") 
-)
-WITHOUT OIDS;
-
 CREATE TABLE "lifelines" (
 "lid" int8 NOT NULL,
 "user_id" int8 NOT NULL,
 PRIMARY KEY ("lid") 
-)
-WITHOUT OIDS;
-
-CREATE TABLE "tracks" (
-"tid" int8 NOT NULL,
-"geometry" line NOT NULL,
-"description" varchar(255),
-"space_id" int8,
-PRIMARY KEY ("tid") 
 )
 WITHOUT OIDS;
 
@@ -128,8 +107,6 @@ ALTER TABLE "lifelines" ADD CONSTRAINT "fk_lifelines_users_1" FOREIGN KEY ("user
 ALTER TABLE "participants" ADD CONSTRAINT "fk_participants_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("uid");
 ALTER TABLE "participants" ADD CONSTRAINT "fk_participants_events_1" FOREIGN KEY ("event_id") REFERENCES "events" ("eid");
 ALTER TABLE "events" ADD CONSTRAINT "fk_events_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "spatialinfo" ("sid");
-ALTER TABLE "spatialinfo" ADD CONSTRAINT "fk_spatialinfo_places_1" FOREIGN KEY ("place_id") REFERENCES "places" ("pid");
-ALTER TABLE "tracks" ADD CONSTRAINT "fk_tracks_spatialinfo_1" FOREIGN KEY ("space_id") REFERENCES "spatialinfo" ("sid");
 ALTER TABLE "transportmodes" ADD CONSTRAINT "fk_transportmodes_modes_1" FOREIGN KEY ("mode_id") REFERENCES "modes" ("mid");
 ALTER TABLE "transportmodes" ADD CONSTRAINT "fk_transportmodes_transportinfo_1" FOREIGN KEY ("transinfo_id") REFERENCES "transportinfo" ("tid");
 ALTER TABLE "transportinfo" ADD CONSTRAINT "fk_transportinfo_events_1" FOREIGN KEY ("event_id") REFERENCES "events" ("eid");
