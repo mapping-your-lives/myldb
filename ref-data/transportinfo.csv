@@ -1,3 +1,3 @@
 "tid","cost","duration","distance","description","event_id"
-1,30,"interval '3 hours'",100000,"驾车往返长沙市和江背镇",1
-2,0,"interval '3 hours'",5000,"在江背镇和乌川湖水库游览",1
+1,30,"3 hours",100000,"驾车往返长沙市和江背镇",1
+2,0,"3 hours",5000,"在江背镇和乌川湖水库游览",1
