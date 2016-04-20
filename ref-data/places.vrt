@@ -1,6 +1,6 @@
 <OGRVRTDataSource>
     <OGRVRTLayer name="places">
-        <SrcDataSource>places.csv</SrcDataSource>
+        <SrcDataSource>ref-data/places.csv</SrcDataSource>
         <GeometryType>wkbPoint</GeometryType>
         <LayerSRS>WGS84</LayerSRS>
         <GeometryField encoding="PointFromColumns" x="lon" y="lat"/>
